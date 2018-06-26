@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import cx from 'classnames';
+// import cx from 'classnames';
 import Spinner from './Spinner';
 
 const Div = styled.div`
@@ -20,13 +20,16 @@ class LazyLoad extends PureComponent() {
     };
   }
 
-  render () {
+  render() {
     const { props } = this;
+
+    const productImage = props.src
+      ? <img className={props.class} src={props.src} alt={props.alt} />
+      : null;
 
     return (
       <Div>
-        <Spinner />
-        <img className={props.class} src={props.src} alt={props.alt} />
+        {this.state.loaded ? productImage : <Spinner />}
       </Div>
     );
   }
@@ -44,28 +47,3 @@ LazyLoad.defaultProps = {
 };
 
 export default LazyLoad;
-
-
-  componentDidMount() {
-    const newImage = document.createElement('img');
-
-    newImage.src = this.props.src;
-
-    newImage.onload = () => {
-      this.setState({ loaded: true });
-    };
-  }
-
-  render() {
-    const { props, state } = this;
-    const productImage = props.src
-      ? <img className="dc-lazy-loaded-image__img" src={props.src} alt={props.alt} />
-      : null;
-
-    return (
-      <div className={cx('dc-lazy-loaded-image', props.className)}>
-        {state.loaded ? (productImage) : (<Loader />)}
-      </div>
-    );
-  }
-}
